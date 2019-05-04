@@ -6,6 +6,7 @@ import java.util.concurrent.Semaphore;
 class Philosopher implements Runnable {
 
     private int id;
+    private int  eattime;
 
     private int amount=0;
 
@@ -22,7 +23,7 @@ class Philosopher implements Runnable {
 
     public void run() {
         try {
-            while (amount<100) {
+            while (amount<100){
                 think();
                 pickUpLeftChopstick();
                 pickUpRightChopstick();
@@ -70,8 +71,19 @@ class Philosopher implements Runnable {
     private void eat() throws InterruptedException {
         System.out.println("Philosopher " + id + " is eating.\n");
         System.out.flush();
-        amount+=20;
-        Thread.sleep(new Random().nextInt(10));
+        do{
+            eattime=new Random().nextInt(10);
+            //generate a random value for eat time which is greater than 0
+        }while (eattime<=0);
+
+        if (amount+eattime*5>100){
+            eattime=(100-amount)/5;
+            amount=100;
+        }else {
+            amount=amount+eattime*5;
+        }
+
+        Thread.sleep(eattime);
     }
 
 
